@@ -19,9 +19,22 @@ public class BreakSchedule {
 	//                the position of each each break is specified by the integers in breakList. 
 	//                Refer to the assignment specification for how a single break contributes to the cost.
 	
-	 int totalCost (String word, ArrayList<Integer> breakList) { // TODO Complete for Task 2
+	int totalCost (String word, ArrayList<Integer> breakList) { // TODO Complete for Task 2
+		
+		//dp table initialisation
+		int size = word.length();
+		int[][] dpTable = new int [size][size];
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				if(i>j){
+					dpTable[i][j] = 0;
+				} else {
+					dpTable[i][j] = j-i+1;
+				}
+			}
+		}
 		return -1;
-		 }
+	}
 	 
 	// Precondition: word is a string and breakList is an array of integers in strictly increasing order
 	//               the last element of breakList is no more than the number of characters in word.
