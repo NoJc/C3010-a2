@@ -35,6 +35,31 @@ public class BreakSchedule {
 		}
 		return -1;
 	}
+
+	int costHelper(int[][]table,int[] boundaries, ArrayList<Integer> breakList){
+		//if there exists a single split point then return the boundary calculation
+		if(breakList.size() == 1 && breakList.get(0)<=j && breakList.get(0)>=i){
+			return table[boundaries[0]][boundaries[1]];
+		}
+		//if there exists more than one then we kinda iterate through each one and assume that we pick that one
+		//annoying thing is calculating the new boundary points. Two cases really exist, one: the thing that
+		//we are trying is in between split points, and two: the point we are trying is on an edge.
+		//the boundaries given in this case are the coordinates for the initial value that we add to the
+		//minimum choice.
+		//
+		//when to update table? -> when costHelper has resolved a minimum, update the table coordinates with
+		//currentVal + minimum.
+		
+		for(int i = 0; i<breakList.size(); i++){
+
+		}
+	}
+
+
+
+
+
+
 	 
 	// Precondition: word is a string and breakList is an array of integers in strictly increasing order
 	//               the last element of breakList is no more than the number of characters in word.
