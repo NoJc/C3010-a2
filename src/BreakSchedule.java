@@ -20,7 +20,13 @@ public class BreakSchedule {
 	//                Refer to the assignment specification for how a single break contributes to the cost.
 	
 	int totalCost (String word, ArrayList<Integer> breakList) { // TODO Complete for Task 2
-		
+
+		if(breakList == null || breakList.isEmpty()){
+			return 0;
+		}
+		if(word.equals("")){
+			return 0;
+		}	
 		//dp table initialisation
 		int size = word.length();
 		int[][] dpTable = new int [size][size];
@@ -53,6 +59,9 @@ public class BreakSchedule {
 		
 
 	int costHelper(int[][]table,int[] boundaries, ArrayList<Integer> breakList){
+		if(breakList.isEmpty()){
+			return 0;
+		}
 		int size = breakList.size();
 		int topBorder = boundaries[1];
 		int botBorder = boundaries[0];
@@ -113,7 +122,8 @@ public class BreakSchedule {
 			}
 		}
 
-		return table[boundaries[0]][boundaries[1]]+=min;
+		table[botBorder][topBorder]+=min;
+		return table[botBorder][topBorder];
 	}
 
 
