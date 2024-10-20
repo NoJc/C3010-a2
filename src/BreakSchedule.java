@@ -67,6 +67,13 @@ public class BreakSchedule {
 		int size = breakList.size();
 		int topBorder = boundaries[1];
 		int botBorder = boundaries[0];
+		
+		//if the table has been altered, then we have solved this sub problem in the past
+		if(table[botBorder][topBorder] != topBorder-botBorder+1) {
+			System.out.println("sub problem already done");
+			return table[botBorder][topBorder];
+		}
+		
 		//if there exists a single split point then return the boundary calculation
 		if(size == 1 && breakList.get(0)<topBorder && breakList.get(0)>=botBorder){
 			return table[botBorder][topBorder];
@@ -105,7 +112,7 @@ public class BreakSchedule {
 			//handle left side
 			newBound[0] = botBorder;
 			newBound[1] = curr;
-			for(int j = i+1; j<newPoints.size(); j++){
+			for(int j = newPoints.size()-1; j>i; j--){
 				newPoints.remove(j);
 			}
 			int leftSide = costHelper(table,newBound,newPoints);
@@ -114,7 +121,7 @@ public class BreakSchedule {
 			newBound[0] = curr+1;
 			newBound[1] = topBorder;
 			newPoints = new ArrayList<>(breakList);
-			for(int j = 0; j<i+1; j++){
+			for(int j = 0; j<i; j++){
 				newPoints.remove(j);
 			}
 			int rightSide = costHelper(table,newBound,newPoints);
@@ -130,8 +137,8 @@ public class BreakSchedule {
 				min = resolutions.get(i);
 			}
 		}
-
-		return table[botBorder][topBorder]+min;
+		table[botBorder][topBorder]+=min;
+		return table[botBorder][topBorder];
 	}
 
 

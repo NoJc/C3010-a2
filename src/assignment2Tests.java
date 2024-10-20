@@ -9,6 +9,18 @@ import org.junit.Test;
 public class assignment2Tests {
 	
 	@Test
+	public void custombreakListTest() {
+		BreakSchedule x = new BreakSchedule();
+		String w = "razzmatazz";
+		ArrayList<Integer> b = new ArrayList<Integer>();
+		b.add(1);
+		b.add(3);
+		b.add(7);
+		b.add(8);
+		assertEquals(22, x.totalCost(w,b));
+	}
+	
+	@Test
 	public void testEmptybreakList() {
 		BreakSchedule x= new BreakSchedule();
 		String w= "Holiday";
