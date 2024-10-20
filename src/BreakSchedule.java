@@ -32,12 +32,14 @@ public class BreakSchedule {
 		int[][] dpTable = new int [size][size];
 		for(int i = 0; i<size; i++){
 			for(int j = 0; j<size; j++){
-				if(i>j){
+				if(i>=j){
 					dpTable[i][j] = 0;
 				} else {
 					dpTable[i][j] = j-i+1;
 				}
+				System.out.print(dpTable[i][j]);
 			}
+			System.out.println();
 		}
 		int[] boundaries = new int[2];
 		boundaries[0] = 0;
@@ -45,7 +47,7 @@ public class BreakSchedule {
 		return costHelper(dpTable,boundaries,breakList);
 	}
 
-	//if there exists more than one then we kinda iterate through each one and assume that we pick that one
+	//if there exists more than one then we iterate through each one and assume that we pick that one
 	//annoying thing is calculating the new boundary points. Two cases really exist, one: the thing that
 	//we are trying is in between split points, and two: the point we are trying is on an edge.
 	//the boundaries given in this case are the coordinates for the initial value that we add to the
@@ -66,8 +68,10 @@ public class BreakSchedule {
 		int topBorder = boundaries[1];
 		int botBorder = boundaries[0];
 		//if there exists a single split point then return the boundary calculation
-		if(size == 1 && breakList.get(0)<=j && breakList.get(0)>=i){
+		if(size == 1 && breakList.get(0)<topBorder && breakList.get(0)>=botBorder){
 			return table[botBorder][topBorder];
+		} else if(size == 1 && breakList.get(0) == topBorder) {
+			return 0;
 		}
 		
 		ArrayList<Integer> resolutions = new ArrayList<>();
@@ -77,7 +81,7 @@ public class BreakSchedule {
 			int[] newBound = new int[2];
 			ArrayList<Integer> newPoints = new ArrayList<>(breakList);
 			//I think we disregard out of bounds slip points for now
-			if(curr > topBorder || curr <botBorder){
+			if(curr > topBorder || curr < botBorder){
 				continue;
 			}
 			if(i == 0){
@@ -89,7 +93,10 @@ public class BreakSchedule {
 				continue;
 			}
 			if(i == breakList.size()-1){
+				newBound[0] = botBorder;
+				newBound[1] = curr;
 				//if we are the right most then we should be the last in the list really
+				newPoints.remove(i);
 				resolutions.add(costHelper(table,newBound,newPoints));
 				continue;
 			}
@@ -98,11 +105,11 @@ public class BreakSchedule {
 			//handle left side
 			newBound[0] = botBorder;
 			newBound[1] = curr;
-			for(int j = i; j<newPoints.size(); j++){
+			for(int j = i+1; j<newPoints.size(); j++){
 				newPoints.remove(j);
 			}
-			resolutions.add(costHelper(table,newBound,newPoints));
-
+			int leftSide = costHelper(table,newBound,newPoints);
+			
 			//handle right side
 			newBound[0] = curr+1;
 			newBound[1] = topBorder;
@@ -110,7 +117,9 @@ public class BreakSchedule {
 			for(int j = 0; j<i+1; j++){
 				newPoints.remove(j);
 			}
-			resolutions.add(costHelper(table,newBound,newPoints));
+			int rightSide = costHelper(table,newBound,newPoints);
+			
+			resolutions.add((rightSide+leftSide));
 		}
 		int min = 0;
 		if(!resolutions.isEmpty()){
@@ -122,8 +131,7 @@ public class BreakSchedule {
 			}
 		}
 
-		table[botBorder][topBorder]+=min;
-		return table[botBorder][topBorder];
+		return table[botBorder][topBorder]+min;
 	}
 
 
@@ -138,6 +146,34 @@ public class BreakSchedule {
 	// 					breaks specified in breakList which yields the minimum total cost.
 	 
 	 ArrayList<Integer> breakSchedule (String word, ArrayList<Integer> breakList) { // TODO Complete for Task 3
+		if(breakList == null || breakList.isEmpty()){
+			return null;
+		}
+		if(word.equals("")){
+			return null;
+		}	
+		//dp table initialisation
+		int size = word.length();
+		int[][] dpTable = new int [size][size];
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				if(i>=j){
+					dpTable[i][j] = 0;
+				} else {
+					dpTable[i][j] = j-i+1;
+				}
+				System.out.print(dpTable[i][j]);
+			}
+			System.out.println();
+		}
+		int[] boundaries = new int[2];
+		boundaries[0] = 0;
+		boundaries[1] = size-1;
+		return scheduleHelper(dpTable,boundaries,breakList);
+	 }
+	 
+	 ArrayList<Integer> scheduleHelper(int[][]table,int[] boundaries, ArrayList<Integer> breakList){
 		 return null;
-	 }	 
+	 }
+	 
 }
