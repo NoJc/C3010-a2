@@ -21,6 +21,17 @@ public class assignment2Tests {
 	}
 	
 	@Test
+	public void custombreakListTest2() {
+		BreakSchedule x = new BreakSchedule();
+		String w = "help";
+		ArrayList<Integer> b = new ArrayList<Integer>();
+		b.add(1);
+		b.add(2);
+		b.add(3);
+		assertEquals(6, x.totalCost(w,b));
+	}
+	
+	@Test
 	public void testEmptybreakList() {
 		BreakSchedule x= new BreakSchedule();
 		String w= "Holiday";

@@ -26,9 +26,20 @@ public class BreakSchedule {
 		}
 		if(word.equals("")){
 			return 0;
-		}	
-		//dp table initialisation
+		}		
 		int size = word.length();
+		
+		//breakList sanitisation
+		
+		ArrayList<Integer> inertBreaks = new ArrayList<>();
+		
+		int k = breakList.size()-1;
+		while(breakList.get(k)>=size-1){
+			inertBreaks.add(breakList.get(k));
+			breakList.remove(k);
+			k--;
+		}
+		//dp table initialisation
 		dpTable = new int [size][size];
 		for(int i = 0; i<size; i++){
 			for(int j = 0; j<size; j++){
@@ -78,7 +89,7 @@ public class BreakSchedule {
 		int botBorder = boundaries[0];
 		
 		//if the table has been altered, then we have solved this sub problem in the past
-		if(dpTable[botBorder][topBorder] != topBorder-botBorder+1) {
+		if(dpTable[botBorder][topBorder] != topBorder-botBorder+1 && dpTable[botBorder][topBorder] != 0) {
 			System.out.println("sub problem already done -> ["+botBorder+"]["+topBorder+"]");
 			return dpTable[botBorder][topBorder];
 		}
