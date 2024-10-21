@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.*;
 
 public class BreakSchedule {
-	
+	int[][] dpTable;
 	
 	// Use this class to implement programs for Tasks 2 & 3. Your file must not change the package name,
 	// nor the class name. You must not change the names nor the signatures of the two program stubs
@@ -29,7 +29,7 @@ public class BreakSchedule {
 		}	
 		//dp table initialisation
 		int size = word.length();
-		int[][] dpTable = new int [size][size];
+		dpTable = new int [size][size];
 		for(int i = 0; i<size; i++){
 			for(int j = 0; j<size; j++){
 				if(i>=j){
@@ -37,14 +37,23 @@ public class BreakSchedule {
 				} else {
 					dpTable[i][j] = j-i+1;
 				}
-				System.out.print(dpTable[i][j]);
+				System.out.print(dpTable[i][j] + " ");
 			}
 			System.out.println();
 		}
 		int[] boundaries = new int[2];
 		boundaries[0] = 0;
 		boundaries[1] = size-1;
-		return costHelper(dpTable,boundaries,breakList);
+		System.out.println();
+		int result = costHelper(boundaries,breakList);
+		System.out.println();
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				System.out.print(dpTable[i][j] + " ");
+			}
+			System.out.println();
+		}
+		return result;
 	}
 
 	//if there exists more than one then we iterate through each one and assume that we pick that one
@@ -60,7 +69,7 @@ public class BreakSchedule {
 	//have all resolved values put into a large list where we can then take the minimum to add to our boundary point
 		
 
-	int costHelper(int[][]table,int[] boundaries, ArrayList<Integer> breakList){
+	int costHelper(int[] boundaries, ArrayList<Integer> breakList){
 		if(breakList.isEmpty()){
 			return 0;
 		}
@@ -69,14 +78,14 @@ public class BreakSchedule {
 		int botBorder = boundaries[0];
 		
 		//if the table has been altered, then we have solved this sub problem in the past
-		if(table[botBorder][topBorder] != topBorder-botBorder+1) {
-			System.out.println("sub problem already done");
-			return table[botBorder][topBorder];
+		if(dpTable[botBorder][topBorder] != topBorder-botBorder+1) {
+			System.out.println("sub problem already done -> ["+botBorder+"]["+topBorder+"]");
+			return dpTable[botBorder][topBorder];
 		}
 		
 		//if there exists a single split point then return the boundary calculation
 		if(size == 1 && breakList.get(0)<topBorder && breakList.get(0)>=botBorder){
-			return table[botBorder][topBorder];
+			return dpTable[botBorder][topBorder];
 		} else if(size == 1 && breakList.get(0) == topBorder) {
 			return 0;
 		}
@@ -96,7 +105,7 @@ public class BreakSchedule {
 				newBound[0] = curr+1;
 				newBound[1] = topBorder;
 				newPoints.remove(i);
-				resolutions.add(costHelper(table,newBound,newPoints));
+				resolutions.add(costHelper(newBound,newPoints));
 				continue;
 			}
 			if(i == breakList.size()-1){
@@ -104,7 +113,7 @@ public class BreakSchedule {
 				newBound[1] = curr;
 				//if we are the right most then we should be the last in the list really
 				newPoints.remove(i);
-				resolutions.add(costHelper(table,newBound,newPoints));
+				resolutions.add(costHelper(newBound,newPoints));
 				continue;
 			}
 			//else we are in the middle of the breakPoints
@@ -112,19 +121,19 @@ public class BreakSchedule {
 			//handle left side
 			newBound[0] = botBorder;
 			newBound[1] = curr;
-			for(int j = newPoints.size()-1; j>i; j--){
+			for(int j = newPoints.size()-1; j>=i; j--){
 				newPoints.remove(j);
 			}
-			int leftSide = costHelper(table,newBound,newPoints);
+			int leftSide = costHelper(newBound,newPoints);
 			
 			//handle right side
 			newBound[0] = curr+1;
 			newBound[1] = topBorder;
 			newPoints = new ArrayList<>(breakList);
-			for(int j = 0; j<i; j++){
+			for(int j = i; j>=0; j--){
 				newPoints.remove(j);
 			}
-			int rightSide = costHelper(table,newBound,newPoints);
+			int rightSide = costHelper(newBound,newPoints);
 			
 			resolutions.add((rightSide+leftSide));
 		}
@@ -137,16 +146,11 @@ public class BreakSchedule {
 				min = resolutions.get(i);
 			}
 		}
-		table[botBorder][topBorder]+=min;
-		return table[botBorder][topBorder];
+		dpTable[botBorder][topBorder]+=min;
+		System.out.println("table coords " + botBorder + " " + topBorder + " altered to " + dpTable[botBorder][topBorder]);
+		return dpTable[botBorder][topBorder];
 	}
 
-
-
-
-
-
-	 
 	// Precondition: word is a string and breakList is an array of integers in strictly increasing order
 	//               the last element of breakList is no more than the number of characters in word.
 	// Postcondition: Return the schedule of breaks so that word is broken according to the list of
@@ -161,7 +165,7 @@ public class BreakSchedule {
 		}	
 		//dp table initialisation
 		int size = word.length();
-		int[][] dpTable = new int [size][size];
+		dpTable = new int [size][size];
 		for(int i = 0; i<size; i++){
 			for(int j = 0; j<size; j++){
 				if(i>=j){
@@ -176,10 +180,10 @@ public class BreakSchedule {
 		int[] boundaries = new int[2];
 		boundaries[0] = 0;
 		boundaries[1] = size-1;
-		return scheduleHelper(dpTable,boundaries,breakList);
+		return scheduleHelper(boundaries,breakList);
 	 }
 	 
-	 ArrayList<Integer> scheduleHelper(int[][]table,int[] boundaries, ArrayList<Integer> breakList){
+	 ArrayList<Integer> scheduleHelper(int[] boundaries, ArrayList<Integer> breakList){
 		 return null;
 	 }
 	 
